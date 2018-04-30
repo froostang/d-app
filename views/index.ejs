@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+
+    <title>Employee Editor</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <h1 class="display-4">Edit Employee Information</h1>
+          <p class="lead">Use this app to add/edit/delete existing employees.</p>
+        </div>
+      </div>
+
+      <div class="col-xs-12 view-section card">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Base Pay</th>
+            <th scope="col">Deductions</th>
+            <th scope="col">Take Home Pay</th>
+            <th scope="col">Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(var i=0; i < response.length; i++) { %>
+          <tr>
+           <td><%= response[i].first%></td>
+           <td><%= response[i].last%></td>
+           <td><%= response[i].base%></td>
+           <td><%= response[i].deductions%></td>
+           <td><%= response[i].takehome%></td>
+           <td>
+            <!-- Generate modals for editing -->
+             <div><button type="button" class="btn btn-secondary edit-btn" data-toggle="modal" data-target="#<%= response[i].first + response[i].last %>">Edit</button></div>
+             <form action="/delete" id="delete" method="post">
+               <input type="hidden" value="<%= response[i].first%>" name="first" />
+               <input type="hidden" value="<%= response[i].last%>" name="last" />
+               <div><button type="submit" value="Submit" class="btn btn-danger edit-btn">Delete</button></div>
+             </form>
+           </td>
+          </tr>
+
+          <div class="modal fade" id="<%= response[i].first + response[i].last %>" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Editing: <%= response[i].first %></h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form action="/update" id="update" method="post">
+                    <div class="row">
+                      <div class="col">
+                        First Name: <input type="text" class="form-control" value="<%= response[i].first%>" name="first" readonly/>
+                      </div>
+                      <div class="col">
+                        Last Name: <input type="text" class="form-control" value="<%= response[i].last%>" name="last" readonly/>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        Base Pay: <input type="number" class="form-control" value="<%= response[i].base%>" name="base" />
+                      </div>
+                      <div class="col">
+                        Deductions: <input type="text" pattern="[0-9,]+" class="form-control" value="<%= response[i].deductions%>" name="deductions" />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        Take Home: <input type="text" class="form-control" value="<%= response[i].takehome%>" name="takehome" readonly/>
+                      </div>
+                    </div>
+                    <div class="mx-auto new-container"><button type="submit" value="Submit" class="btn btn-danger edit-btn">Update</button></div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+         <% } %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- New employee creation -->
+      <div class="col-xs-12 add-section">
+        <div class="card">
+          <h3 class="display-4 mx-auto addnew">Add New Employee</h3>
+          <form action="/create" id="create" method="post">
+            <div class="row">
+              <div class="col">
+                First Name: <input type="text" class="form-control" placeholder="first name" name="first" />
+              </div>
+              <div class="col">
+                Last Name: <input type="text" class="form-control" placeholder="last name" name="last" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                Base Pay: <input type="text" class="form-control" placeholder="base pay" name="base" />
+              </div>
+              <div class="col">
+                Deductions: <input type="text" class="form-control" pattern="[0-9,]+" placeholder="deductions (e.g. 400,1200,1000)" name="deductions" />
+              </div>
+            </div>
+            <div class="mx-auto new-container"><button id="new" type="submit" value="Submit" class="btn btn-danger">Create New</button></div>
+          </form>
+        </div>
+      </div>
+    </div> <!-- end container -->
+
+    <script type="text/javascript" src="custom.js"></script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>
