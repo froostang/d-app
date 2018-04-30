@@ -1,7 +1,7 @@
 // get dependencies
 const http = require('http');
 const mongoose = require('mongoose');
-const url = "mongodb://heroku_zw7r33bw:ktsol2q3v842ec1urocmvappdp@ds251217.mlab.com:51217/heroku_zw7r33bw";
+const url = require('./config.txt');
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
